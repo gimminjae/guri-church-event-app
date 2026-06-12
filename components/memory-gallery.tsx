@@ -24,12 +24,6 @@ export function MemoryGallery({ memories }: MemoryGalleryProps) {
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-black tracking-[0.08em] text-sky-700">
-              {EVENT_COPY.entryLabel} 전시관
-            </p>
-            <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] text-slate-950 sm:text-4xl">
-              추억 전시관
-            </h2>
             <p className="mt-2 text-sm leading-6 text-slate-700 sm:text-base">
               등록된 사진을 눌러 그날의 이야기까지 함께 읽어보세요.
             </p>

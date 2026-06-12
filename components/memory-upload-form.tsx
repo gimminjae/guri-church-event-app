@@ -142,15 +142,11 @@ export function MemoryUploadForm() {
     <section className="event-panel rounded-[36px] px-5 py-5 sm:px-6 sm:py-6">
       <div className="event-panel-strong rounded-[28px] px-5 py-5">
         <p className="text-xs font-black tracking-[0.08em] text-sky-700">
-          {EVENT_COPY.entryLabel} 참여 안내
+          참여 안내
         </p>
         <h2 className="mt-2 text-2xl font-black tracking-[-0.05em] text-slate-950">
           사진과 짧은 설명을 함께 올려주세요
         </h2>
-        <p className="mt-3 text-sm leading-6 text-slate-700">
-          {EVENT_COPY.uploadGuide} 정성껏 남겨 주신 추억은 전시관에서 모두가
-          함께 볼 수 있어요.
-        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-4 grid gap-4">
@@ -170,7 +166,19 @@ export function MemoryUploadForm() {
             }}
             maxLength={MAX_NAME_LENGTH}
             disabled={isBusy}
-            placeholder="예: 김민재"
+            placeholder="이름을 정확히 적어주세요. 응모 확인과 당첨자 발표에 사용됩니다."
+            className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400"
+          />
+        </label>
+
+        <label className="grid gap-2">
+          <span className="text-sm font-black text-slate-900">부서</span>
+          <input
+            value={department}
+            onChange={(event) => setDepartment(event.target.value)}
+            maxLength={MAX_DEPARTMENT_LENGTH}
+            disabled={isBusy}
+            placeholder="부서를 적어주세요. 응모 확인과 당첨자 발표에 사용됩니다."
             className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400"
           />
         </label>
@@ -201,22 +209,10 @@ export function MemoryUploadForm() {
             onChange={(event) => setNickname(event.target.value)}
             maxLength={MAX_NICKNAME_LENGTH}
             disabled={isBusy || nicknameSameAsName}
-            placeholder="예: 민재"
+            placeholder="다른 사람에게 노출되는 이름입니다."
             className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 disabled:opacity-70"
           />
         </div>
-
-        <label className="grid gap-2">
-          <span className="text-sm font-black text-slate-900">부서</span>
-          <input
-            value={department}
-            onChange={(event) => setDepartment(event.target.value)}
-            maxLength={MAX_DEPARTMENT_LENGTH}
-            disabled={isBusy}
-            placeholder="예: 청년부"
-            className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400"
-          />
-        </label>
 
         <label className="grid gap-2">
           <span className="text-sm font-black text-slate-900">
@@ -325,14 +321,14 @@ export function MemoryUploadForm() {
             href="/"
             className="event-button-secondary inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-black text-sky-950 transition hover:-translate-y-0.5"
           >
-            전시관 보기
+            둘러보기
           </Link>
           <button
             type="submit"
             disabled={isBusy}
             className="event-button-primary inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isBusy ? "응모 진행 중..." : "응모 2 등록하기"}
+            {isBusy ? "응모 진행 중..." : "응모하기"}
           </button>
         </div>
       </form>

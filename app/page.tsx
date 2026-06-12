@@ -39,9 +39,6 @@ export default async function Home() {
               {EVENT_COPY.eventTitle}
             </h1>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-sm font-bold text-sky-950 sm:text-base">
-              <span className="rounded-full bg-white/85 px-4 py-2 shadow-[0_8px_20px_rgba(33,110,178,0.12)]">
-                {EVENT_COPY.entryLabel}
-              </span>
               <span className="rounded-full bg-sky-100/80 px-4 py-2 shadow-[0_8px_20px_rgba(33,110,178,0.12)]">
                 이벤트 기간 {EVENT_COPY.eventPeriod}
               </span>
@@ -49,24 +46,18 @@ export default async function Home() {
             <p className="mt-5 text-xl font-black tracking-[-0.04em] text-slate-900 sm:text-3xl">
               {EVENT_COPY.entryTitle}
             </p>
-            <p className="mt-3 text-sm leading-6 text-slate-700 sm:text-base">
-              사진 한 장과 짧은 설명만 올리면 응모가 완료돼요. 이 페이지는
-              포스터의 <span className="event-highlight font-extrabold">응모 2</span>
-              를 위한 추억 업로드 전시관입니다.
-            </p>
           </div>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="event-panel-strong rounded-[30px] px-5 py-5 text-left sm:px-6">
               <p className="text-sm font-black text-slate-900">
-                응모자 추첨하여{" "}
+                응모자를 추첨하여{" "}
+              </p>
+              <p className="text-sm font-black text-slate-900">
                 <span className="event-highlight">{EVENT_COPY.prizeTitle}</span>
                 를 선물로 드립니다!
               </p>
               <div className="event-divider mt-4" />
-              <p className="mt-4 text-sm leading-6 text-slate-700">
-                {EVENT_COPY.prizeDescription}
-              </p>
               <p className="mt-5 text-base font-bold text-slate-900">
                 발표:{" "}
                 <span className="event-highlight">
@@ -84,17 +75,11 @@ export default async function Home() {
                 <p className="mt-2 text-lg font-black tracking-[-0.04em] text-slate-900">
                   기억에 남는 사진을 고르기
                 </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  수양회에서 웃고 울고 함께했던 순간이면 충분해요.
-                </p>
               </div>
               <div className="event-panel-strong rounded-[30px] px-5 py-5 text-left">
                 <p className="text-sm font-black text-sky-700">STEP 2</p>
                 <p className="mt-2 text-lg font-black tracking-[-0.04em] text-slate-900">
                   사진과 짧은 설명 남기기
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  {EVENT_COPY.uploadGuide}
                 </p>
               </div>
             </div>
@@ -105,13 +90,13 @@ export default async function Home() {
               href="/upload"
               className="event-button-primary inline-flex h-[52px] items-center justify-center rounded-full px-6 text-base font-black text-white transition hover:-translate-y-0.5"
             >
-              응모 2 참여하기
+              참여하기
             </Link>
             <Link
               href="#memory-gallery"
               className="event-button-secondary inline-flex h-[52px] items-center justify-center rounded-full px-6 text-base font-black text-sky-950 transition hover:-translate-y-0.5"
             >
-              추억 둘러보기
+              둘러보기
             </Link>
           </div>
 
