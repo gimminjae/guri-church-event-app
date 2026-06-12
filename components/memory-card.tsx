@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 import type { MemoryRecord } from "@/types/memory";
 
 type MemoryCardProps = {
@@ -8,46 +9,39 @@ type MemoryCardProps = {
 };
 
 const formatter = new Intl.DateTimeFormat("ko-KR", {
+  year: "numeric",
   month: "short",
   day: "numeric",
 });
 
 export function MemoryCard({ memory, onSelect }: MemoryCardProps) {
+  const publicName = getPublicMemoryDisplayName(memory);
+
   return (
     <button
       type="button"
       onClick={() => onSelect(memory)}
-      className="group relative overflow-hidden rounded-[30px] border border-sky-300/65 bg-white/88 p-3 text-left shadow-[0_16px_28px_rgba(33,110,178,0.12)] transition hover:-translate-y-1 hover:shadow-[0_22px_34px_rgba(33,110,178,0.18)]"
+      className="group flex flex-col overflow-hidden rounded-[28px] bg-white text-left shadow-[0_18px_34px_rgba(25,102,165,0.12)] ring-1 ring-sky-100/80 transition hover:-translate-y-1 hover:shadow-[0_24px_42px_rgba(25,102,165,0.18)] sm:h-[340px]"
     >
-      <div className="absolute inset-x-6 top-2 h-20 rounded-full bg-sky-100/55 blur-2xl" />
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[22px] border border-white/70 bg-sky-50 p-3">
+      <div className="relative h-1/2 overflow-hidden bg-[linear-gradient(135deg,#dfffb6_0%,#b6f132_46%,#92df15_100%)]">
         <img
           src={memory.imageUrl}
-          alt={memory.name}
-          className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.02]"
+          alt={publicName}
+          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
           loading="lazy"
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-[linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,0.18))]" />
       </div>
-      <div className="relative px-1 pb-1 pt-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <span className="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-black tracking-[0.08em] text-sky-800">
-              추억 기록
-            </span>
-            <p className="mt-3 truncate text-xl font-black tracking-[-0.05em] text-slate-950">
-              {memory.name}
-            </p>
-            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-700">
-              {memory.description}
-            </p>
-          </div>
-          <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-sky-700 shadow-[0_8px_16px_rgba(33,110,178,0.12)]">
-            열기
-          </span>
+
+      <div className="flex flex-1 flex-col justify-between gap-4 px-5 py-4">
+        <div>
+          <p className="text-2xl font-black tracking-[-0.05em] text-slate-950">
+            {publicName}
+          </p>
+          <p className="mt-2 text-sm font-medium text-slate-500">
+            {formatter.format(memory.createdAt)}
+          </p>
         </div>
-        <p className="mt-4 text-xs font-bold text-slate-500">
-          {formatter.format(memory.createdAt)}
-        </p>
       </div>
     </button>
   );

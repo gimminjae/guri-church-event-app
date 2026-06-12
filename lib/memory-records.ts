@@ -58,3 +58,9 @@ export function isPublicMemory(memory: MemoryRecord) {
 export function isManageableMemory(memory: MemoryRecord) {
   return memory.status === "published" && !memory.isDeleted;
 }
+
+export function getPublicMemoryDisplayName(
+  memory: Pick<MemoryRecord, "name" | "nickname">,
+) {
+  return memory.nickname || memory.name;
+}

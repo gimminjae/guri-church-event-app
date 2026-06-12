@@ -6,7 +6,6 @@ import Link from "next/link";
 import { startTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { readImageDimensions } from "@/lib/browser-images";
-import { EVENT_COPY } from "@/lib/event";
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_DEPARTMENT_LENGTH,

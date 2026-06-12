@@ -4,6 +4,7 @@
 
 import { startTransition, useEffect, useMemo, useState } from "react";
 import { subscribeToPublishedMemories } from "@/lib/firebase/client-memories";
+import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 import type { MemoryRecord } from "@/types/memory";
 
 type DisplaySlideshowProps = {
@@ -17,11 +18,13 @@ function DisplaySlide({
   memory: MemoryRecord;
   animated?: boolean;
 }) {
+  const publicName = getPublicMemoryDisplayName(memory);
+
   return (
     <div className={`absolute inset-0 ${animated ? "display-fade-in" : ""}`}>
       <img
         src={memory.imageUrl}
-        alt={memory.name}
+        alt={publicName}
         className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl brightness-[0.38]"
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_42%),linear-gradient(180deg,rgba(3,10,24,0.6),rgba(3,10,24,0.22)_18%,rgba(3,10,24,0.14)_62%,rgba(3,10,24,0.72))]" />
@@ -29,7 +32,7 @@ function DisplaySlide({
       <div className="relative flex h-full flex-col px-6 py-8 text-white sm:px-10 sm:py-10">
         <header className="text-center">
           <p className="display-script text-4xl text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.28)] sm:text-6xl">
-            {memory.name}
+            {publicName}
           </p>
         </header>
 

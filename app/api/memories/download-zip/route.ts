@@ -5,6 +5,7 @@ import {
   getMemoryZipEntryName,
 } from "@/lib/memory-downloads";
 import { listPublishedMemories } from "@/lib/firebase/memories";
+import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 
 export const runtime = "nodejs";
 
@@ -54,7 +55,9 @@ export async function POST(request: Request) {
         const response = await fetch(memory.imageUrl);
 
         if (!response.ok) {
-          throw new Error(`이미지를 불러오지 못했어요: ${memory.name}`);
+          throw new Error(
+            `이미지를 불러오지 못했어요: ${getPublicMemoryDisplayName(memory)}`,
+          );
         }
 
         zip.file(

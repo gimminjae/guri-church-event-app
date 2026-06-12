@@ -1,4 +1,5 @@
 import path from "node:path";
+import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 import type { MemoryRecord } from "@/types/memory";
 
 function sanitizeFileNamePart(value: string) {
@@ -20,7 +21,7 @@ export function getMemoryDownloadFileName(memory: MemoryRecord) {
   const date = new Date(memory.createdAt).toISOString().slice(0, 10);
   const extension = getMemoryFileExtension(memory);
 
-  return `${sanitizeFileNamePart(memory.name)}-${date}${extension}`;
+  return `${sanitizeFileNamePart(getPublicMemoryDisplayName(memory))}-${date}${extension}`;
 }
 
 export function getMemoryZipEntryName(memory: MemoryRecord) {
@@ -28,7 +29,7 @@ export function getMemoryZipEntryName(memory: MemoryRecord) {
   const extension = getMemoryFileExtension(memory);
   const shortId = memory.id.slice(0, 8);
 
-  return `${date}-${sanitizeFileNamePart(memory.name)}-${shortId}${extension}`;
+  return `${date}-${sanitizeFileNamePart(getPublicMemoryDisplayName(memory))}-${shortId}${extension}`;
 }
 
 export function getAttachmentContentDisposition(fileName: string) {

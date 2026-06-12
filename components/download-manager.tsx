@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
+import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 import type { MemoryRecord } from "@/types/memory";
 
 type DownloadManagerProps = {
@@ -119,6 +120,7 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
       <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {memories.map((memory) => {
           const isSelected = selectedIds.includes(memory.id);
+          const publicName = getPublicMemoryDisplayName(memory);
 
           return (
             <article
@@ -154,14 +156,14 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
               <div className="mt-4 flex h-[280px] items-center justify-center overflow-hidden rounded-[22px] border border-white/70 bg-sky-50 p-3">
                 <img
                   src={memory.imageUrl}
-                  alt={memory.name}
+                  alt={publicName}
                   className="max-h-full w-auto max-w-full object-contain"
                 />
               </div>
 
               <div className="mt-4">
                 <p className="text-xl font-black tracking-[-0.05em] text-slate-950">
-                  {memory.name}
+                  {publicName}
                 </p>
                 <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-700">
                   {memory.description}
