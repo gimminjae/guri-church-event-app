@@ -74,7 +74,7 @@ export function MemoryDetailModal({
         닫기
       </button>
 
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-16 sm:px-8 sm:pb-6 sm:pt-20">
+      <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-16 sm:px-8 sm:pb-6 sm:pt-20">
         <div className="flex min-h-0 flex-1 items-center justify-center">
           <img
             src={memory.imageUrl}
@@ -83,7 +83,7 @@ export function MemoryDetailModal({
           />
         </div>
 
-        <div className="mt-4 max-h-[38vh] shrink-0 overflow-y-auto rounded-[28px] border border-white/10 bg-black/58 px-5 py-4 backdrop-blur-lg sm:mt-6 sm:max-h-[32vh] sm:px-8 sm:py-5">
+        <div className="mt-4 shrink-0 rounded-[28px] border border-white/10 bg-black/58 px-5 py-4 backdrop-blur-lg sm:mt-6 sm:px-8 sm:py-5">
           <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div className="min-w-0">
               <p className="text-2xl font-black tracking-[-0.05em] text-white sm:text-3xl">
@@ -93,7 +93,7 @@ export function MemoryDetailModal({
                 {formatter.format(memory.createdAt)}
               </p>
             </div>
-            <p className="max-w-3xl whitespace-pre-line text-sm leading-6 text-white/90 sm:text-base sm:leading-7">
+            <p className="max-h-[20vh] max-w-3xl overflow-y-auto pr-1 whitespace-pre-line text-sm leading-6 text-white/90 sm:max-h-[24vh] sm:text-base sm:leading-7">
               {memory.description}
             </p>
           </div>
