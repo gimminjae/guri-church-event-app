@@ -1,6 +1,8 @@
 export type MemoryRecord = {
   id: string;
   name: string;
+  nickname: string;
+  department: string;
   description: string;
   imageUrl: string;
   imageKey: string;
@@ -19,6 +21,8 @@ export type MemoryRecord = {
 
 export type CreateMemoryInput = {
   name: string;
+  nickname: string;
+  department: string;
   description: string;
   imageUrl: string;
   imageKey: string;
@@ -29,6 +33,8 @@ export type CreateMemoryInput = {
 
 export type UpdateMemoryInput = {
   name: string;
+  nickname: string;
+  department: string;
   description: string;
   isVisible: boolean;
   imageUrl?: string;

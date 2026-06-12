@@ -9,9 +9,11 @@ import { readImageDimensions } from "@/lib/browser-images";
 import { EVENT_COPY } from "@/lib/event";
 import {
   ACCEPTED_IMAGE_TYPES,
+  MAX_DEPARTMENT_LENGTH,
   MAX_DESCRIPTION_LENGTH,
   MAX_IMAGE_FILE_SIZE,
   MAX_NAME_LENGTH,
+  MAX_NICKNAME_LENGTH,
   validateCreateMemoryInput,
 } from "@/lib/validations/memory";
 
@@ -46,6 +48,9 @@ function getStageLabel(stage: UploadStage) {
 export function MemoryUploadForm() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [department, setDepartment] = useState("");
+  const [nicknameSameAsName, setNicknameSameAsName] = useState(true);
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -79,6 +84,8 @@ export function MemoryUploadForm() {
 
       validateCreateMemoryInput({
         name,
+        nickname,
+        department,
         description,
         imageUrl: "https://placeholder.local",
         imageKey: "memories/placeholder",
@@ -94,6 +101,8 @@ export function MemoryUploadForm() {
 
       const payload = new FormData();
       payload.append("name", name);
+      payload.append("nickname", nickname);
+      payload.append("department", department);
       payload.append("description", description);
       payload.append("image", file);
       payload.append("imageWidth", String(width));
@@ -147,14 +156,64 @@ export function MemoryUploadForm() {
       <form onSubmit={handleSubmit} className="mt-4 grid gap-4">
         <label className="grid gap-2">
           <span className="text-sm font-black text-slate-900">
-            이름 또는 닉네임
+            이름
           </span>
           <input
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => {
+              const nextName = event.target.value;
+              setName(nextName);
+
+              if (nicknameSameAsName) {
+                setNickname(nextName);
+              }
+            }}
             maxLength={MAX_NAME_LENGTH}
             disabled={isBusy}
-            placeholder="예: 청년부 민지"
+            placeholder="예: 김민재"
+            className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400"
+          />
+        </label>
+
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm font-black text-slate-900">닉네임</span>
+            <label className="inline-flex items-center gap-2 text-xs font-black text-sky-700">
+              <input
+                type="checkbox"
+                checked={nicknameSameAsName}
+                disabled={isBusy}
+                onChange={(event) => {
+                  const checked = event.target.checked;
+                  setNicknameSameAsName(checked);
+
+                  if (checked) {
+                    setNickname(name);
+                  }
+                }}
+                className="h-4 w-4 rounded border-sky-300 text-sky-500"
+              />
+              이름과 동일
+            </label>
+          </div>
+          <input
+            value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
+            maxLength={MAX_NICKNAME_LENGTH}
+            disabled={isBusy || nicknameSameAsName}
+            placeholder="예: 민재"
+            className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 disabled:opacity-70"
+          />
+        </div>
+
+        <label className="grid gap-2">
+          <span className="text-sm font-black text-slate-900">부서</span>
+          <input
+            value={department}
+            onChange={(event) => setDepartment(event.target.value)}
+            maxLength={MAX_DEPARTMENT_LENGTH}
+            disabled={isBusy}
+            placeholder="예: 청년부"
             className="event-input h-[52px] rounded-[18px] px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400"
           />
         </label>

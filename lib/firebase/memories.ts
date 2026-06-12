@@ -103,6 +103,8 @@ export async function createMemory(input: CreateMemoryInput) {
   const memory: MemoryRecord = {
     id: memoryId,
     name: input.name,
+    nickname: input.nickname,
+    department: input.department,
     description: input.description,
     imageUrl: input.imageUrl,
     imageKey: input.imageKey,
@@ -133,6 +135,8 @@ export async function updateMemory(id: string, input: UpdateMemoryInput) {
   const nextMemory: MemoryRecord = {
     ...existingMemory,
     name: input.name,
+    nickname: input.nickname,
+    department: input.department,
     description: input.description,
     isVisible: input.isVisible,
     updatedAt: Date.now(),

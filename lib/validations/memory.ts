@@ -2,6 +2,8 @@ import type { CreateMemoryInput, UpdateMemoryInput } from "@/types/memory";
 
 export const MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024;
 export const MAX_NAME_LENGTH = 32;
+export const MAX_NICKNAME_LENGTH = 32;
+export const MAX_DEPARTMENT_LENGTH = 32;
 export const MAX_DESCRIPTION_LENGTH = 280;
 export const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -99,6 +101,12 @@ export function validateCreateMemoryInput(input: unknown): CreateMemoryInput {
 
   const payload = input as Partial<CreateMemoryInput>;
   const name = collapseSpaces(typeof payload.name === "string" ? payload.name : "");
+  const nickname = collapseSpaces(
+    typeof payload.nickname === "string" ? payload.nickname : "",
+  );
+  const department = collapseSpaces(
+    typeof payload.department === "string" ? payload.department : "",
+  );
   const description = normalizeDescription(
     typeof payload.description === "string" ? payload.description : "",
   );
@@ -107,6 +115,16 @@ export function validateCreateMemoryInput(input: unknown): CreateMemoryInput {
   assert(
     name.length <= MAX_NAME_LENGTH,
     `이름은 ${MAX_NAME_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(nickname.length >= 1, "닉네임을 입력해 주세요.");
+  assert(
+    nickname.length <= MAX_NICKNAME_LENGTH,
+    `닉네임은 ${MAX_NICKNAME_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(department.length >= 1, "부서를 입력해 주세요.");
+  assert(
+    department.length <= MAX_DEPARTMENT_LENGTH,
+    `부서는 ${MAX_DEPARTMENT_LENGTH}자 이하로 입력해 주세요.`,
   );
   assert(description.length >= 1, "설명을 입력해 주세요.");
   assert(
@@ -138,6 +156,8 @@ export function validateCreateMemoryInput(input: unknown): CreateMemoryInput {
 
   return {
     name,
+    nickname,
+    department,
     description,
     imageUrl: payload.imageUrl,
     imageKey: payload.imageKey,
@@ -152,6 +172,12 @@ export function validateUpdateMemoryInput(input: unknown): UpdateMemoryInput {
 
   const payload = input as Partial<UpdateMemoryInput>;
   const name = collapseSpaces(typeof payload.name === "string" ? payload.name : "");
+  const nickname = collapseSpaces(
+    typeof payload.nickname === "string" ? payload.nickname : "",
+  );
+  const department = collapseSpaces(
+    typeof payload.department === "string" ? payload.department : "",
+  );
   const description = normalizeDescription(
     typeof payload.description === "string" ? payload.description : "",
   );
@@ -161,6 +187,16 @@ export function validateUpdateMemoryInput(input: unknown): UpdateMemoryInput {
   assert(
     name.length <= MAX_NAME_LENGTH,
     `이름은 ${MAX_NAME_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(nickname.length >= 1, "닉네임을 입력해 주세요.");
+  assert(
+    nickname.length <= MAX_NICKNAME_LENGTH,
+    `닉네임은 ${MAX_NICKNAME_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(department.length >= 1, "부서를 입력해 주세요.");
+  assert(
+    department.length <= MAX_DEPARTMENT_LENGTH,
+    `부서는 ${MAX_DEPARTMENT_LENGTH}자 이하로 입력해 주세요.`,
   );
   assert(description.length >= 1, "설명을 입력해 주세요.");
   assert(
@@ -200,6 +236,8 @@ export function validateUpdateMemoryInput(input: unknown): UpdateMemoryInput {
 
   return {
     name,
+    nickname,
+    department,
     description,
     isVisible,
     imageUrl: payload.imageUrl,

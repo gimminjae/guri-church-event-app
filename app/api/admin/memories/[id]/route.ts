@@ -47,6 +47,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     const formData = await request.formData();
     const file = formData.get("image");
     const name = formData.get("name");
+    const nickname = formData.get("nickname");
+    const department = formData.get("department");
     const description = formData.get("description");
     const isVisible = formData.get("isVisible");
     const imageWidthValue = formData.get("imageWidth");
@@ -102,6 +104,8 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const payload = validateUpdateMemoryInput({
       name,
+      nickname,
+      department,
       description,
       isVisible,
       ...(imagePayload ?? {}),

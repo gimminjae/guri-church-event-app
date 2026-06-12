@@ -18,6 +18,8 @@ function AdminMemoryCard({
   onUpdated: (memory: MemoryRecord) => void;
 }) {
   const [name, setName] = useState(memory.name);
+  const [nickname, setNickname] = useState(memory.nickname);
+  const [department, setDepartment] = useState(memory.department);
   const [description, setDescription] = useState(memory.description);
   const [isVisible, setIsVisible] = useState(memory.isVisible);
   const [file, setFile] = useState<File | null>(null);
@@ -44,6 +46,8 @@ function AdminMemoryCard({
     try {
       const payload = new FormData();
       payload.append("name", name);
+      payload.append("nickname", nickname);
+      payload.append("department", department);
       payload.append("description", description);
       payload.append("isVisible", String(isVisible));
 
@@ -94,6 +98,12 @@ function AdminMemoryCard({
             {memory.name}
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
+            <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-black text-sky-700">
+              {memory.department || "부서 미입력"}
+            </span>
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-slate-700">
+              닉네임 {memory.nickname || memory.name}
+            </span>
             <span
               className={`rounded-full px-3 py-1 text-xs font-black ${
                 isVisible
@@ -124,6 +134,24 @@ function AdminMemoryCard({
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
+            className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
+          />
+        </label>
+
+        <label className="grid gap-2">
+          <span className="text-sm font-black text-slate-900">닉네임</span>
+          <input
+            value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
+            className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
+          />
+        </label>
+
+        <label className="grid gap-2">
+          <span className="text-sm font-black text-slate-900">부서</span>
+          <input
+            value={department}
+            onChange={(event) => setDepartment(event.target.value)}
             className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
           />
         </label>

@@ -56,6 +56,8 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("image");
     const name = formData.get("name");
+    const nickname = formData.get("nickname");
+    const department = formData.get("department");
     const description = formData.get("description");
 
     if (!(file instanceof File)) {
@@ -96,6 +98,8 @@ export async function POST(request: Request) {
 
     const payload = validateCreateMemoryInput({
       name,
+      nickname,
+      department,
       description,
       imageUrl: publicUrl,
       imageKey: fileKey,

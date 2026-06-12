@@ -16,6 +16,12 @@ export function normalizeMemoryRecord(
   return {
     id,
     name: record.name,
+    nickname:
+      typeof record.nickname === "string" && record.nickname.trim().length > 0
+        ? record.nickname
+        : record.name,
+    department:
+      typeof record.department === "string" ? record.department : "",
     description: record.description,
     imageUrl: record.imageUrl,
     imageKey: record.imageKey,
