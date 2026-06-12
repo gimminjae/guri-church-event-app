@@ -91,7 +91,7 @@ function AdminMemoryCard({
   }
 
   return (
-    <article className="rounded-[28px] border border-sky-300/65 bg-white/88 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)] sm:rounded-[32px] sm:p-5">
+    <article className="min-w-0 w-full max-w-full rounded-[28px] border border-sky-300/65 bg-white/88 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)] sm:rounded-[32px] sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="break-words text-xl font-black tracking-[-0.05em] text-slate-950">
@@ -129,44 +129,44 @@ function AdminMemoryCard({
       </div>
 
       <form onSubmit={handleSubmit} className="mt-4 grid gap-4">
-        <label className="grid gap-2">
+        <label className="grid min-w-0 gap-2">
           <span className="text-sm font-black text-slate-900">이름</span>
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
+            className="event-input h-[48px] w-full min-w-0 rounded-[16px] px-4 text-sm text-slate-900 outline-none"
           />
         </label>
 
-        <label className="grid gap-2">
+        <label className="grid min-w-0 gap-2">
           <span className="text-sm font-black text-slate-900">닉네임</span>
           <input
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
-            className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
+            className="event-input h-[48px] w-full min-w-0 rounded-[16px] px-4 text-sm text-slate-900 outline-none"
           />
         </label>
 
-        <label className="grid gap-2">
+        <label className="grid min-w-0 gap-2">
           <span className="text-sm font-black text-slate-900">부서</span>
           <input
             value={department}
             onChange={(event) => setDepartment(event.target.value)}
-            className="event-input h-[48px] rounded-[16px] px-4 text-sm text-slate-900 outline-none"
+            className="event-input h-[48px] w-full min-w-0 rounded-[16px] px-4 text-sm text-slate-900 outline-none"
           />
         </label>
 
-        <label className="grid gap-2">
+        <label className="grid min-w-0 gap-2">
           <span className="text-sm font-black text-slate-900">설명</span>
           <textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             rows={4}
-            className="event-input rounded-[16px] px-4 py-3 text-sm leading-6 text-slate-900 outline-none"
+            className="event-input w-full min-w-0 rounded-[16px] px-4 py-3 text-sm leading-6 text-slate-900 outline-none"
           />
         </label>
 
-        <label className="grid gap-2">
+        <label className="grid min-w-0 gap-2">
           <span className="text-sm font-black text-slate-900">이미지 교체</span>
           <input
             type="file"
@@ -182,7 +182,7 @@ function AdminMemoryCard({
                 return nextFile ? URL.createObjectURL(nextFile) : null;
               });
             }}
-            className="event-input rounded-[16px] px-4 py-3 text-sm text-slate-700 file:mb-2 file:mr-0 file:block file:w-full file:rounded-full file:border-0 file:bg-sky-500 file:px-4 file:py-2.5 file:text-sm file:font-black file:text-white sm:file:mb-0 sm:file:mr-3 sm:file:inline-flex sm:file:w-auto"
+            className="event-input block w-full min-w-0 max-w-full rounded-[16px] px-4 py-3 text-sm text-slate-700 file:mb-2 file:mr-0 file:block file:w-full file:max-w-full file:overflow-hidden file:text-ellipsis file:whitespace-nowrap file:rounded-full file:border-0 file:bg-sky-500 file:px-4 file:py-2.5 file:text-sm file:font-black file:text-white sm:file:mb-0 sm:file:mr-3 sm:file:inline-flex sm:file:w-auto"
           />
         </label>
 
