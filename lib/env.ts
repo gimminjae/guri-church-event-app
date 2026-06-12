@@ -1,8 +1,8 @@
 const REQUIRED_SERVER_ENV_KEYS = [
-  "AWS_REGION",
-  "AWS_S3_BUCKET_NAME",
-  "AWS_ACCESS_KEY_ID",
-  "AWS_SECRET_ACCESS_KEY",
+  "NEXT_PUBLIC_AWS_REGION",
+  "NEXT_PUBLIC_AWS_S3_BUCKET_NAME",
+  "NEXT_PUBLIC_AWS_ACCESS_KEY_ID",
+  "NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY",
   "NEXT_PUBLIC_FIREBASE_DATABASE_URL",
 ] as const;
 
@@ -46,11 +46,12 @@ export function getServerEnv(): ServerEnv {
   }
 
   return {
-    awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID!.trim(),
-    awsRegion: process.env.AWS_REGION!.trim(),
-    awsS3BucketName: process.env.AWS_S3_BUCKET_NAME!.trim(),
-    awsS3PublicBaseUrl: process.env.AWS_S3_PUBLIC_BASE_URL?.trim() || null,
-    awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!.trim(),
+    awsAccessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!.trim(),
+    awsRegion: process.env.NEXT_PUBLIC_AWS_REGION!.trim(),
+    awsS3BucketName: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME!.trim(),
+    awsS3PublicBaseUrl:
+      process.env.NEXT_PUBLIC_AWS_S3_PUBLIC_BASE_URL?.trim() || null,
+    awsSecretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!.trim(),
     firebaseDatabaseUrl: getFirebaseDatabaseUrl(),
   };
 }

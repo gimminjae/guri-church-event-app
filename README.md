@@ -38,11 +38,11 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=630678916897
 NEXT_PUBLIC_FIREBASE_APP_ID=1:630678916897:web:7466cef2f349064678f860
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-QYEJ38HJ7R
 
-AWS_REGION=
-AWS_S3_BUCKET_NAME=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_S3_PUBLIC_BASE_URL=
+NEXT_PUBLIC_AWS_REGION=
+NEXT_PUBLIC_AWS_S3_BUCKET_NAME=
+NEXT_PUBLIC_AWS_ACCESS_KEY_ID=
+NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY=
+NEXT_PUBLIC_AWS_S3_PUBLIC_BASE_URL=
 ```
 
 3. 개발 서버 실행
@@ -64,7 +64,7 @@ yarn dev
 - 업로드용 버킷을 준비합니다.
 - 이미지 업로드는 Next.js 서버가 AWS SDK로 S3에 직접 전송합니다.
 - 업로드된 이미지를 브라우저에서 볼 수 있도록 버킷 정책 또는 CDN 공개 경로를 준비해야 합니다.
-- `AWS_S3_PUBLIC_BASE_URL` 은 공개 이미지 기준 URL입니다.
+- `NEXT_PUBLIC_AWS_S3_PUBLIC_BASE_URL` 은 공개 이미지 기준 URL입니다.
   예시:
   - CloudFront 사용 시: `https://cdn.example.com`
   - S3 공개 버킷 사용 시: `https://your-bucket.s3.ap-northeast-2.amazonaws.com`
