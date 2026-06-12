@@ -2,7 +2,17 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import { getServerEnv } from "@/lib/env";
-import type { CreateMemoryInput, MemoryRecord } from "@/types/memory";
+import {
+  isManageableMemory,
+  isPublicMemory,
+  normalizeMemoryRecord,
+  sortMemoriesByCreatedAtDesc,
+} from "@/lib/memory-records";
+import type {
+  CreateMemoryInput,
+  MemoryRecord,
+  UpdateMemoryInput,
+} from "@/types/memory";
 
 const MEMORIES_PATH = "memories";
 
@@ -38,44 +48,31 @@ async function writeDatabase<T>(path: string, payload: T) {
   }
 }
 
-function normalizeMemoryRecord(
-  id: string,
-  record: Partial<MemoryRecord>,
-): MemoryRecord | null {
-  if (
-    typeof record.name !== "string" ||
-    typeof record.description !== "string" ||
-    typeof record.imageUrl !== "string" ||
-    typeof record.imageKey !== "string"
-  ) {
+async function patchDatabase<T>(path: string, payload: T) {
+  const response = await fetch(`${getMemoriesEndpoint()}${path}.json`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error("Firebase Realtime Database 수정에 실패했어요.");
+  }
+}
+
+export async function getMemoryById(id: string) {
+  const rawValue = await readDatabase<Partial<MemoryRecord> | null>(`/${id}`);
+
+  if (!rawValue) {
     return null;
   }
 
-  return {
-    id,
-    name: record.name,
-    description: record.description,
-    imageUrl: record.imageUrl,
-    imageKey: record.imageKey,
-    imageWidth:
-      typeof record.imageWidth === "number" ? record.imageWidth : undefined,
-    imageHeight:
-      typeof record.imageHeight === "number" ? record.imageHeight : undefined,
-    createdAt:
-      typeof record.createdAt === "number" ? record.createdAt : Date.now(),
-    updatedAt:
-      typeof record.updatedAt === "number" ? record.updatedAt : Date.now(),
-    status: record.status === "published" ? "published" : "published",
-    thumbnailUrl:
-      typeof record.thumbnailUrl === "string" ? record.thumbnailUrl : undefined,
-    eventId: typeof record.eventId === "string" ? record.eventId : undefined,
-    authorId: typeof record.authorId === "string" ? record.authorId : undefined,
-    isDeleted: record.isDeleted === true,
-    sortOrder: typeof record.sortOrder === "number" ? record.sortOrder : null,
-  };
+  return normalizeMemoryRecord(id, rawValue);
 }
 
-export async function listPublishedMemories(limit = 120) {
+export async function listAllMemories(limit = 500) {
   const rawValue = await readDatabase<
     Record<string, Partial<MemoryRecord>> | null
   >();
@@ -87,9 +84,15 @@ export async function listPublishedMemories(limit = 120) {
   return Object.entries(rawValue)
     .map(([id, record]) => normalizeMemoryRecord(id, record))
     .filter((memory): memory is MemoryRecord => memory !== null)
-    .filter((memory) => memory.status === "published" && !memory.isDeleted)
-    .sort((first, second) => second.createdAt - first.createdAt)
+    .filter((memory) => isManageableMemory(memory))
+    .sort(sortMemoriesByCreatedAtDesc)
     .slice(0, limit);
+}
+
+export async function listPublishedMemories(limit = 120) {
+  const memories = await listAllMemories(limit * 2);
+
+  return memories.filter((memory) => isPublicMemory(memory)).slice(0, limit);
 }
 
 export async function createMemory(input: CreateMemoryInput) {
@@ -106,6 +109,7 @@ export async function createMemory(input: CreateMemoryInput) {
     createdAt: timestamp,
     updatedAt: timestamp,
     status: "published",
+    isVisible: input.isVisible !== false,
     ...(typeof input.imageWidth === "number"
       ? { imageWidth: input.imageWidth }
       : {}),
@@ -117,4 +121,32 @@ export async function createMemory(input: CreateMemoryInput) {
   await writeDatabase(`/${memoryId}`, memory);
 
   return memory;
+}
+
+export async function updateMemory(id: string, input: UpdateMemoryInput) {
+  const existingMemory = await getMemoryById(id);
+
+  if (!existingMemory) {
+    throw new Error("수정할 데이터를 찾지 못했어요.");
+  }
+
+  const nextMemory: MemoryRecord = {
+    ...existingMemory,
+    name: input.name,
+    description: input.description,
+    isVisible: input.isVisible,
+    updatedAt: Date.now(),
+    ...(input.imageUrl ? { imageUrl: input.imageUrl } : {}),
+    ...(input.imageKey ? { imageKey: input.imageKey } : {}),
+    ...(typeof input.imageWidth === "number"
+      ? { imageWidth: input.imageWidth }
+      : {}),
+    ...(typeof input.imageHeight === "number"
+      ? { imageHeight: input.imageHeight }
+      : {}),
+  };
+
+  await patchDatabase(`/${id}`, nextMemory);
+
+  return nextMemory;
 }

@@ -9,6 +9,7 @@ export type MemoryRecord = {
   createdAt: number;
   updatedAt: number;
   status: "published";
+  isVisible: boolean;
   thumbnailUrl?: string;
   eventId?: string;
   authorId?: string;
@@ -21,6 +22,17 @@ export type CreateMemoryInput = {
   description: string;
   imageUrl: string;
   imageKey: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  isVisible?: boolean;
+};
+
+export type UpdateMemoryInput = {
+  name: string;
+  description: string;
+  isVisible: boolean;
+  imageUrl?: string;
+  imageKey?: string;
   imageWidth?: number;
   imageHeight?: number;
 };

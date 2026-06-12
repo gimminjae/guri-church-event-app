@@ -1,4 +1,4 @@
-import type { CreateMemoryInput } from "@/types/memory";
+import type { CreateMemoryInput, UpdateMemoryInput } from "@/types/memory";
 
 export const MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024;
 export const MAX_NAME_LENGTH = 32;
@@ -28,6 +28,26 @@ function collapseSpaces(value: string) {
 
 function normalizeDescription(value: string) {
   return value.replace(/\r\n/g, "\n").trim();
+}
+
+function normalizeBoolean(value: unknown) {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  if (value === "true") {
+    return true;
+  }
+
+  if (value === "false") {
+    return false;
+  }
+
+  return null;
 }
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -119,6 +139,69 @@ export function validateCreateMemoryInput(input: unknown): CreateMemoryInput {
   return {
     name,
     description,
+    imageUrl: payload.imageUrl,
+    imageKey: payload.imageKey,
+    imageWidth: payload.imageWidth,
+    imageHeight: payload.imageHeight,
+    isVisible: payload.isVisible !== false,
+  };
+}
+
+export function validateUpdateMemoryInput(input: unknown): UpdateMemoryInput {
+  assert(input && typeof input === "object", "잘못된 추억 수정 요청입니다.");
+
+  const payload = input as Partial<UpdateMemoryInput>;
+  const name = collapseSpaces(typeof payload.name === "string" ? payload.name : "");
+  const description = normalizeDescription(
+    typeof payload.description === "string" ? payload.description : "",
+  );
+  const isVisible = normalizeBoolean(payload.isVisible);
+
+  assert(name.length >= 1, "이름을 입력해 주세요.");
+  assert(
+    name.length <= MAX_NAME_LENGTH,
+    `이름은 ${MAX_NAME_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(description.length >= 1, "설명을 입력해 주세요.");
+  assert(
+    description.length <= MAX_DESCRIPTION_LENGTH,
+    `설명은 ${MAX_DESCRIPTION_LENGTH}자 이하로 입력해 주세요.`,
+  );
+  assert(isVisible !== null, "노출 여부 값이 올바르지 않아요.");
+
+  if (payload.imageUrl !== undefined) {
+    assert(
+      typeof payload.imageUrl === "string" && /^https?:\/\//.test(payload.imageUrl),
+      "이미지 URL이 올바르지 않아요.",
+    );
+  }
+
+  if (payload.imageKey !== undefined) {
+    assert(
+      typeof payload.imageKey === "string" &&
+        payload.imageKey.startsWith("memories/"),
+      "이미지 키가 올바르지 않아요.",
+    );
+  }
+
+  if (payload.imageWidth !== undefined) {
+    assert(
+      typeof payload.imageWidth === "number" && payload.imageWidth > 0,
+      "이미지 너비 정보가 올바르지 않아요.",
+    );
+  }
+
+  if (payload.imageHeight !== undefined) {
+    assert(
+      typeof payload.imageHeight === "number" && payload.imageHeight > 0,
+      "이미지 높이 정보가 올바르지 않아요.",
+    );
+  }
+
+  return {
+    name,
+    description,
+    isVisible,
     imageUrl: payload.imageUrl,
     imageKey: payload.imageKey,
     imageWidth: payload.imageWidth,

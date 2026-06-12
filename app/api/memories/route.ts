@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const fileKey = createMemoryObjectKey(extension);
+    const fileKey = createMemoryObjectKey(extension, validatedFile.fileName);
     const buffer = Buffer.from(await file.arrayBuffer());
     const { publicUrl } = await uploadMemoryObject({
       fileKey,

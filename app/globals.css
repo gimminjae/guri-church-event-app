@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f5f4;
-  --foreground: #1c1917;
-  --surface: #ffffff;
-  --surface-strong: #fafaf9;
-  --surface-ink: #e7e5e4;
-  --accent: #44403c;
-  --accent-deep: #292524;
-  --accent-soft: #d6d3d1;
-  --line: rgba(28, 25, 23, 0.1);
-  --shadow: rgba(28, 25, 23, 0.06);
+  --background: #a9f0f4;
+  --foreground: #16304d;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.9);
+  --surface-ink: rgba(255, 255, 255, 0.52);
+  --accent: #35bbff;
+  --accent-deep: #1e7fe2;
+  --accent-soft: #e8fbff;
+  --accent-pink: #ff34b8;
+  --line: rgba(45, 176, 255, 0.32);
+  --shadow: rgba(24, 95, 164, 0.18);
 }
 
 @theme inline {
@@ -42,11 +43,16 @@
 }
 
 html {
-  background: #f5f5f4;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.5), transparent 35%),
+    linear-gradient(180deg, #bdf8ff 0%, #97ebf6 48%, #bdf9f5 100%);
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.45), transparent 28%),
+    linear-gradient(180deg, #bdf8ff 0%, #97ebf6 48%, #bdf9f5 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
 }
@@ -69,6 +75,104 @@ img {
 }
 
 ::selection {
-  background: rgba(68, 64, 60, 0.18);
+  background: rgba(53, 187, 255, 0.26);
   color: var(--foreground);
+}
+
+.event-panel {
+  border: 1.5px solid rgba(63, 190, 255, 0.54);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 18px 40px rgba(33, 110, 178, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.event-panel-strong {
+  border: 1.5px solid rgba(63, 190, 255, 0.62);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 20px 48px rgba(33, 110, 178, 0.18);
+  backdrop-filter: blur(16px);
+}
+
+.event-outline-title {
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  -webkit-text-stroke: 2px #49c0ff;
+  text-shadow:
+    0 4px 0 #49c0ff,
+    0 10px 20px rgba(43, 137, 214, 0.24);
+}
+
+.event-outline-kicker {
+  color: #111827;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.92);
+  text-shadow:
+    0 5px 0 rgba(53, 187, 255, 0.35),
+    0 12px 20px rgba(18, 85, 140, 0.18);
+}
+
+.event-highlight {
+  color: var(--accent-pink);
+}
+
+.event-button-primary {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(180deg, #51d4ff 0%, #2ca6ff 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 12px 24px rgba(33, 110, 178, 0.18);
+}
+
+.event-button-secondary {
+  border: 1px solid rgba(63, 190, 255, 0.45);
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 10px 22px rgba(33, 110, 178, 0.12);
+}
+
+.event-input {
+  border: 1.5px solid rgba(63, 190, 255, 0.34);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.event-input:focus {
+  border-color: rgba(44, 166, 255, 0.86);
+  box-shadow:
+    0 0 0 4px rgba(83, 200, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.event-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(72, 187, 255, 0),
+    rgba(72, 187, 255, 0.72),
+    rgba(72, 187, 255, 0)
+  );
+}
+
+.display-script {
+  font-family:
+    "Nanum Pen Script",
+    "Nanum Brush Script",
+    "Apple SD Gothic Neo",
+    "Marker Felt",
+    cursive;
+}
+
+@keyframes displayFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.display-fade-in {
+  animation: displayFadeIn 900ms ease forwards;
 }

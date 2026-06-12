@@ -17,28 +17,37 @@ export function MemoryCard({ memory, onSelect }: MemoryCardProps) {
     <button
       type="button"
       onClick={() => onSelect(memory)}
-      className="group overflow-hidden rounded-lg border border-stone-200 bg-white text-left transition hover:border-stone-300 hover:shadow-sm"
+      className="group relative overflow-hidden rounded-[30px] border border-sky-300/65 bg-white/88 p-3 text-left shadow-[0_16px_28px_rgba(33,110,178,0.12)] transition hover:-translate-y-1 hover:shadow-[0_22px_34px_rgba(33,110,178,0.18)]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+      <div className="absolute inset-x-6 top-2 h-20 rounded-full bg-sky-100/55 blur-2xl" />
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[22px] border border-white/70 bg-sky-50 p-3">
         <img
           src={memory.imageUrl}
           alt={memory.name}
-          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+          className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.02]"
           loading="lazy"
         />
       </div>
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
-        <div className="min-w-0">
-          <p className="truncate text-base font-medium text-stone-900">
-            {memory.name}
-          </p>
-          <p className="mt-1 text-xs text-stone-500">
-            {formatter.format(memory.createdAt)}
-          </p>
+      <div className="relative px-1 pb-1 pt-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <span className="inline-flex rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-black tracking-[0.08em] text-sky-800">
+              추억 기록
+            </span>
+            <p className="mt-3 truncate text-xl font-black tracking-[-0.05em] text-slate-950">
+              {memory.name}
+            </p>
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-700">
+              {memory.description}
+            </p>
+          </div>
+          <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-sky-700 shadow-[0_8px_16px_rgba(33,110,178,0.12)]">
+            열기
+          </span>
         </div>
-        <span className="shrink-0 text-xs text-stone-500">
-          자세히
-        </span>
+        <p className="mt-4 text-xs font-bold text-slate-500">
+          {formatter.format(memory.createdAt)}
+        </p>
       </div>
     </button>
   );

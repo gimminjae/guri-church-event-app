@@ -1,6 +1,7 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
+import path from "node:path";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getServerEnv } from "@/lib/env";
 
@@ -28,12 +29,26 @@ function trimTrailingSlash(value: string) {
   return value.replace(/\/+$/, "");
 }
 
-export function createMemoryObjectKey(extension: string) {
+function sanitizeFileStem(fileName: string) {
+  const stem = path.basename(fileName, path.extname(fileName)).normalize("NFC");
+
+  return stem
+    .replace(/[\\/:*?"<>|]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60) || "image";
+}
+
+export function createMemoryObjectKey(extension: string, fileName: string) {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const datePath = `${year}-${month}-${day}`;
+  const fileStem = sanitizeFileStem(fileName);
+  const suffix = randomUUID().slice(0, 8);
 
-  return `memories/${year}/${month}/${randomUUID()}.${extension}`;
+  return `memories/${datePath}/${fileStem}-${suffix}.${extension}`;
 }
 
 export function getPublicAssetUrl(fileKey: string) {
