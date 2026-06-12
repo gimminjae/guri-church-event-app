@@ -64,8 +64,8 @@ export async function POST(request: Request) {
       }),
     );
 
-    const zipBytes = await zip.generateAsync({
-      type: "uint8array",
+    const zipBuffer = await zip.generateAsync({
+      type: "arraybuffer",
       compression: "DEFLATE",
       compressionOptions: {
         level: 6,
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     });
     const fileName = `memories-${new Date().toISOString().slice(0, 10)}.zip`;
 
-    return new Response(zipBytes, {
+    return new Response(zipBuffer, {
       headers: {
         "Content-Type": "application/zip",
         "Content-Disposition": getAttachmentContentDisposition(fileName),

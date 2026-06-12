@@ -101,7 +101,7 @@ export function DisplaySlideshow({
     }
 
     const nextMemory = memories[(activeIndex + 1) % memories.length];
-    let swapTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let swapTimer: number | undefined;
 
     const displayTimer = window.setTimeout(() => {
       setIncomingMemoryId(nextMemory.id);
@@ -115,7 +115,7 @@ export function DisplaySlideshow({
     return () => {
       window.clearTimeout(displayTimer);
 
-      if (swapTimer) {
+      if (swapTimer !== undefined) {
         window.clearTimeout(swapTimer);
       }
     };
