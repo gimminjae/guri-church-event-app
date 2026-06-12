@@ -2,7 +2,11 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import path from "node:path";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getServerEnv } from "@/lib/env";
 
 let s3Client: S3Client | null = null;
@@ -85,4 +89,15 @@ export async function uploadMemoryObject(params: {
   return {
     publicUrl: getPublicAssetUrl(params.fileKey),
   };
+}
+
+export async function deleteMemoryObject(fileKey: string) {
+  const env = getServerEnv();
+
+  const command = new DeleteObjectCommand({
+    Bucket: env.awsS3BucketName,
+    Key: fileKey,
+  });
+
+  await getS3Client().send(command);
 }

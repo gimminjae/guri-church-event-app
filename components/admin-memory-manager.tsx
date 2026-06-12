@@ -10,12 +10,21 @@ type AdminMemoryManagerProps = {
   initialMemories: MemoryRecord[];
 };
 
+type ManagerFeedback =
+  | {
+      message: string;
+      tone: "success" | "warning";
+    }
+  | null;
+
 function AdminMemoryCard({
   memory,
   onUpdated,
+  onDeleted,
 }: {
   memory: MemoryRecord;
   onUpdated: (memory: MemoryRecord) => void;
+  onDeleted: (memoryId: string, memoryName: string, warning?: string) => void;
 }) {
   const [name, setName] = useState(memory.name);
   const [nickname, setNickname] = useState(memory.nickname);
@@ -25,8 +34,10 @@ function AdminMemoryCard({
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const isBusy = isSaving || isDeleting;
 
   useEffect(() => {
     return () => {
@@ -87,6 +98,42 @@ function AdminMemoryCard({
       );
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    const isConfirmed = window.confirm(
+      `"${memory.name}" 데이터를 삭제할까요? 삭제 후에는 되돌릴 수 없어요.`,
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(`/api/admin/memories/${memory.id}`, {
+        method: "DELETE",
+      });
+      const result = (await response.json()) as {
+        error?: string;
+        warning?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.error || "삭제에 실패했어요.");
+      }
+
+      onDeleted(memory.id, memory.name, result.warning);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "삭제에 실패했어요.",
+      );
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -209,13 +256,23 @@ function AdminMemoryCard({
         ) : null}
 
         <div className="flex justify-stretch sm:justify-end">
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="event-button-primary inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-          >
-            {isSaving ? "저장 중..." : "변경 저장"}
-          </button>
+          <div className="flex w-full flex-col-reverse gap-3 sm:w-auto sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isBusy}
+              className="inline-flex h-11 w-full items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-5 text-sm font-black text-rose-700 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            >
+              {isDeleting ? "삭제 중..." : "데이터 삭제"}
+            </button>
+            <button
+              type="submit"
+              disabled={isBusy}
+              className="event-button-primary inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            >
+              {isSaving ? "저장 중..." : "변경 저장"}
+            </button>
+          </div>
         </div>
       </form>
     </article>
@@ -227,13 +284,15 @@ export function AdminMemoryManager({
 }: AdminMemoryManagerProps) {
   const [memories, setMemories] = useState(initialMemories);
   const [searchQuery, setSearchQuery] = useState("");
+  const [feedback, setFeedback] = useState<ManagerFeedback>(null);
   const deferredSearchQuery = useDeferredValue(searchQuery);
 
   const visibleCount = memories.filter((memory) => memory.isVisible).length;
   const hiddenCount = memories.length - visibleCount;
   const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase();
+  const isSearching = normalizedSearchQuery.length > 0;
   const filteredMemories =
-    normalizedSearchQuery.length === 0
+    !isSearching
       ? memories
       : memories.filter((memory) =>
           memory.name.toLowerCase().includes(normalizedSearchQuery),
@@ -247,11 +306,11 @@ export function AdminMemoryManager({
             관리자 페이지
           </p>
           <h1 className="mt-2 text-3xl font-black tracking-[-0.05em] text-slate-950 sm:text-4xl">
-            이미지와 정보 수정
+            이미지와 정보 관리
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-700 sm:text-base">
-            이름, 설명, 이미지와 공개 노출 여부를 이 화면에서 바로 수정할 수
-            있어요.
+            이름, 설명, 이미지, 공개 노출 여부를 수정하고 불필요한 데이터는
+            바로 삭제할 수 있어요.
           </p>
         </div>
 
@@ -295,13 +354,33 @@ export function AdminMemoryManager({
         </div>
       </div>
 
+      {feedback ? (
+        <div
+          className={`mt-5 rounded-[24px] border px-4 py-3 text-sm sm:px-5 ${
+            feedback.tone === "warning"
+              ? "border-amber-200 bg-amber-50/90 text-amber-800"
+              : "border-emerald-200 bg-emerald-50/90 text-emerald-700"
+          }`}
+        >
+          {feedback.message}
+        </div>
+      ) : null}
+
       {filteredMemories.length === 0 ? (
         <div className="mt-5 rounded-[28px] border border-dashed border-sky-300/70 bg-white/82 px-6 py-12 text-center">
           <p className="text-2xl font-black tracking-[-0.05em] text-slate-950">
-            검색 결과가 없습니다
+            {memories.length === 0
+              ? "등록된 데이터가 없습니다"
+              : isSearching
+                ? "검색 결과가 없습니다"
+                : "관리할 데이터가 없습니다"}
           </p>
           <p className="mt-3 text-sm leading-6 text-slate-700 sm:text-base">
-            다른 이름으로 검색하거나 검색어를 지우고 전체 목록을 확인해 주세요.
+            {memories.length === 0
+              ? "새로운 추억이 등록되면 이 화면에서 바로 관리할 수 있어요."
+              : isSearching
+                ? "다른 이름으로 검색하거나 검색어를 지우고 전체 목록을 확인해 주세요."
+                : "등록된 추억이 없어 지금은 표시할 내용이 없어요."}
           </p>
         </div>
       ) : (
@@ -311,11 +390,22 @@ export function AdminMemoryManager({
               key={`${memory.id}:${memory.updatedAt}`}
               memory={memory}
               onUpdated={(updatedMemory) => {
+                setFeedback(null);
                 setMemories((current) =>
                   current.map((item) =>
                     item.id === updatedMemory.id ? updatedMemory : item,
                   ),
                 );
+              }}
+              onDeleted={(deletedMemoryId, deletedMemoryName, warning) => {
+                setMemories((current) =>
+                  current.filter((item) => item.id !== deletedMemoryId),
+                );
+                setFeedback({
+                  message:
+                    warning ?? `"${deletedMemoryName}" 데이터를 삭제했어요.`,
+                  tone: warning ? "warning" : "success",
+                });
               }}
             />
           ))}

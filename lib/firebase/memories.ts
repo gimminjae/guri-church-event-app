@@ -62,6 +62,16 @@ async function patchDatabase<T>(path: string, payload: T) {
   }
 }
 
+async function deleteDatabase(path: string) {
+  const response = await fetch(`${getMemoriesEndpoint()}${path}.json`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Firebase Realtime Database 삭제에 실패했어요.");
+  }
+}
+
 export async function getMemoryById(id: string) {
   const rawValue = await readDatabase<Partial<MemoryRecord> | null>(`/${id}`);
 
@@ -153,4 +163,8 @@ export async function updateMemory(id: string, input: UpdateMemoryInput) {
   await patchDatabase(`/${id}`, nextMemory);
 
   return nextMemory;
+}
+
+export async function deleteMemory(id: string) {
+  await deleteDatabase(`/${id}`);
 }

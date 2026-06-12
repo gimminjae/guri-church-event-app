@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import {
   createMemoryObjectKey,
+  deleteMemoryObject,
   uploadMemoryObject,
 } from "@/lib/aws/s3";
 import { getMissingServerEnv } from "@/lib/env";
-import { getMemoryById, updateMemory } from "@/lib/firebase/memories";
+import {
+  deleteMemory,
+  getMemoryById,
+  updateMemory,
+} from "@/lib/firebase/memories";
 import {
   getImageExtension,
   validateImageUploadInput,
@@ -121,6 +126,60 @@ export async function PATCH(request: Request, context: RouteContext) {
           error instanceof Error
             ? error.message
             : "추억 수정에 실패했어요.",
+      },
+      { status: 400 },
+    );
+  }
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const missingEnvVars = getMissingServerEnv();
+
+  if (missingEnvVars.length > 0) {
+    return NextResponse.json(
+      {
+        error: `필수 환경변수가 비어 있어요: ${missingEnvVars.join(", ")}`,
+      },
+      { status: 503 },
+    );
+  }
+
+  try {
+    const { id } = await context.params;
+    const existingMemory = await getMemoryById(id);
+
+    if (!existingMemory) {
+      return NextResponse.json(
+        {
+          error: "삭제할 데이터를 찾지 못했어요.",
+        },
+        { status: 404 },
+      );
+    }
+
+    await deleteMemory(id);
+
+    let warning: string | undefined;
+
+    try {
+      await deleteMemoryObject(existingMemory.imageKey);
+    } catch (error) {
+      warning = "이미지 파일 정리 중 문제가 있었지만 데이터는 삭제했어요.";
+      console.error("Failed to delete memory image", {
+        id,
+        imageKey: existingMemory.imageKey,
+        error,
+      });
+    }
+
+    return NextResponse.json({ success: true, warning });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "추억 삭제에 실패했어요.",
       },
       { status: 400 },
     );
