@@ -1,28 +1,13 @@
 import Link from "next/link";
 import { ConfigurationNotice } from "@/components/configuration-notice";
 import { EventSceneBackdrop } from "@/components/event-scene-backdrop";
-import { MemoryGallery } from "@/components/memory-gallery";
 import { getMissingServerEnv } from "@/lib/env";
 import { EVENT_COPY } from "@/lib/event";
-import { listPublishedMemories } from "@/lib/firebase/memories";
-import type { MemoryRecord } from "@/types/memory";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const missingEnvVars = getMissingServerEnv();
-  let memories: MemoryRecord[] = [];
-  let loadError: string | null = null;
-
-  if (missingEnvVars.length === 0) {
-    try {
-      memories = await listPublishedMemories();
-    } catch (error) {
-      console.error("Failed to load memories", error);
-      loadError =
-        "추억 목록을 불러오지 못했어요. Firebase 설정이나 데이터베이스 권한을 확인해 주세요.";
-    }
-  }
 
   return (
     <main className="relative min-h-screen overflow-hidden px-4 py-4 sm:px-6 sm:py-6">
@@ -51,7 +36,7 @@ export default async function Home() {
           <div className="mt-6 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="event-panel-strong rounded-[30px] px-5 py-5 text-left sm:px-6">
               <p className="text-sm font-black text-slate-900">
-                응모자를 추첨하여{" "}
+                응모자를 추첨하여
               </p>
               <p className="text-sm font-black text-slate-900">
                 <span className="event-highlight">{EVENT_COPY.prizeTitle}</span>
@@ -93,26 +78,19 @@ export default async function Home() {
               참여하기
             </Link>
             <Link
-              href="#memory-gallery"
+              href="/gallery"
               className="event-button-secondary inline-flex h-[52px] items-center justify-center rounded-full px-6 text-base font-black text-sky-950 transition hover:-translate-y-0.5"
             >
-              둘러보기
+              이미지 보기
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3">
-            {missingEnvVars.length > 0 ? (
+          {missingEnvVars.length > 0 ? (
+            <div className="mt-6">
               <ConfigurationNotice missingKeys={missingEnvVars} />
-            ) : null}
-            {loadError ? (
-              <div className="event-panel-strong rounded-[28px] px-5 py-4 text-sm text-rose-800">
-                {loadError}
-              </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </section>
-
-        <MemoryGallery memories={memories} />
       </div>
     </main>
   );

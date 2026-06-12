@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { readImageDimensions } from "@/lib/browser-images";
 import type { MemoryRecord } from "@/types/memory";
 
@@ -91,10 +91,10 @@ function AdminMemoryCard({
   }
 
   return (
-    <article className="rounded-[32px] border border-sky-300/65 bg-white/88 p-5 shadow-[0_16px_28px_rgba(33,110,178,0.12)]">
+    <article className="rounded-[28px] border border-sky-300/65 bg-white/88 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)] sm:rounded-[32px] sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-xl font-black tracking-[-0.05em] text-slate-950">
+        <div className="min-w-0">
+          <p className="break-words text-xl font-black tracking-[-0.05em] text-slate-950">
             {memory.name}
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -120,7 +120,7 @@ function AdminMemoryCard({
         </div>
       </div>
 
-      <div className="mt-4 flex h-[320px] items-center justify-center overflow-hidden rounded-[24px] border border-white/70 bg-sky-50 p-4">
+      <div className="mt-4 flex h-[220px] items-center justify-center overflow-hidden rounded-[20px] border border-white/70 bg-sky-50 p-3 sm:h-[280px] sm:rounded-[24px] sm:p-4 lg:h-[320px]">
         <img
           src={previewUrl || memory.imageUrl}
           alt={name}
@@ -182,16 +182,16 @@ function AdminMemoryCard({
                 return nextFile ? URL.createObjectURL(nextFile) : null;
               });
             }}
-            className="event-input rounded-[16px] px-4 py-3 text-sm text-slate-700 file:mr-3 file:rounded-full file:border-0 file:bg-sky-500 file:px-4 file:py-2.5 file:text-sm file:font-black file:text-white"
+            className="event-input rounded-[16px] px-4 py-3 text-sm text-slate-700 file:mb-2 file:mr-0 file:block file:w-full file:rounded-full file:border-0 file:bg-sky-500 file:px-4 file:py-2.5 file:text-sm file:font-black file:text-white sm:file:mb-0 sm:file:mr-3 sm:file:inline-flex sm:file:w-auto"
           />
         </label>
 
-        <label className="inline-flex items-center gap-3 rounded-[18px] border border-sky-200/80 bg-sky-50/70 px-4 py-3 text-sm font-black text-slate-900">
+        <label className="flex items-start gap-3 rounded-[18px] border border-sky-200/80 bg-sky-50/70 px-4 py-3 text-sm font-black text-slate-900 sm:items-center">
           <input
             type="checkbox"
             checked={isVisible}
             onChange={(event) => setIsVisible(event.target.checked)}
-            className="h-4 w-4 rounded border-sky-300 text-sky-500"
+            className="mt-0.5 h-4 w-4 rounded border-sky-300 text-sky-500 sm:mt-0"
           />
           전시 페이지와 공개 목록에 노출하기
         </label>
@@ -208,11 +208,11 @@ function AdminMemoryCard({
           </div>
         ) : null}
 
-        <div className="flex justify-end">
+        <div className="flex justify-stretch sm:justify-end">
           <button
             type="submit"
             disabled={isSaving}
-            className="event-button-primary inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+            className="event-button-primary inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {isSaving ? "저장 중..." : "변경 저장"}
           </button>
@@ -226,12 +226,21 @@ export function AdminMemoryManager({
   initialMemories,
 }: AdminMemoryManagerProps) {
   const [memories, setMemories] = useState(initialMemories);
+  const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   const visibleCount = memories.filter((memory) => memory.isVisible).length;
   const hiddenCount = memories.length - visibleCount;
+  const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase();
+  const filteredMemories =
+    normalizedSearchQuery.length === 0
+      ? memories
+      : memories.filter((memory) =>
+          memory.name.toLowerCase().includes(normalizedSearchQuery),
+        );
 
   return (
-    <section className="event-panel rounded-[36px] px-5 py-6 sm:px-6 sm:py-7">
+    <section className="event-panel rounded-[32px] px-4 py-5 sm:rounded-[36px] sm:px-6 sm:py-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-black tracking-[0.08em] text-sky-700">
@@ -247,33 +256,71 @@ export function AdminMemoryManager({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-white/85 px-4 py-2 text-sm font-black text-sky-950 shadow-[0_8px_20px_rgba(33,110,178,0.12)]">
+          <span className="rounded-full bg-white/85 px-3 py-2 text-xs font-black text-sky-950 shadow-[0_8px_20px_rgba(33,110,178,0.12)] sm:px-4 sm:text-sm">
             전체 {memories.length}건
           </span>
-          <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-700">
+          <span className="rounded-full bg-emerald-100 px-3 py-2 text-xs font-black text-emerald-700 sm:px-4 sm:text-sm">
             노출 {visibleCount}건
           </span>
-          <span className="rounded-full bg-slate-200 px-4 py-2 text-sm font-black text-slate-600">
+          <span className="rounded-full bg-slate-200 px-3 py-2 text-xs font-black text-slate-600 sm:px-4 sm:text-sm">
             숨김 {hiddenCount}건
           </span>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 xl:grid-cols-2">
-        {memories.map((memory) => (
-          <AdminMemoryCard
-            key={`${memory.id}:${memory.updatedAt}`}
-            memory={memory}
-            onUpdated={(updatedMemory) => {
-              setMemories((current) =>
-                current.map((item) =>
-                  item.id === updatedMemory.id ? updatedMemory : item,
-                ),
-              );
-            }}
+      <div className="mt-5 flex flex-col gap-3 rounded-[24px] border border-sky-200/70 bg-white/75 p-3 sm:rounded-[28px] sm:p-4 lg:flex-row lg:items-center">
+        <label className="w-full flex-1">
+          <span className="sr-only">이름으로 검색</span>
+          <input
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="이름으로 검색"
+            autoComplete="off"
+            className="event-input h-[48px] w-full rounded-[16px] px-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
           />
-        ))}
+        </label>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:justify-end">
+          <span className="text-sm font-bold text-slate-600">
+            검색 결과 {filteredMemories.length}건
+          </span>
+          {searchQuery.trim().length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="inline-flex h-11 w-full items-center justify-center rounded-full border border-sky-200 bg-white px-4 text-sm font-black text-sky-700 transition hover:-translate-y-0.5 sm:w-auto"
+            >
+              검색 초기화
+            </button>
+          ) : null}
+        </div>
       </div>
+
+      {filteredMemories.length === 0 ? (
+        <div className="mt-5 rounded-[28px] border border-dashed border-sky-300/70 bg-white/82 px-6 py-12 text-center">
+          <p className="text-2xl font-black tracking-[-0.05em] text-slate-950">
+            검색 결과가 없습니다
+          </p>
+          <p className="mt-3 text-sm leading-6 text-slate-700 sm:text-base">
+            다른 이름으로 검색하거나 검색어를 지우고 전체 목록을 확인해 주세요.
+          </p>
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-4 xl:grid-cols-2">
+          {filteredMemories.map((memory) => (
+            <AdminMemoryCard
+              key={`${memory.id}:${memory.updatedAt}`}
+              memory={memory}
+              onUpdated={(updatedMemory) => {
+                setMemories((current) =>
+                  current.map((item) =>
+                    item.id === updatedMemory.id ? updatedMemory : item,
+                  ),
+                );
+              }}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

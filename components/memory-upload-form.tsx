@@ -124,7 +124,7 @@ export function MemoryUploadForm() {
       setProgress(100);
 
       startTransition(() => {
-        router.push("/");
+        router.push("/gallery");
         router.refresh();
       });
     } catch (error) {
@@ -317,7 +317,7 @@ export function MemoryUploadForm() {
 
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Link
-            href="/"
+            href="/gallery"
             className="event-button-secondary inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-black text-sky-950 transition hover:-translate-y-0.5"
           >
             둘러보기

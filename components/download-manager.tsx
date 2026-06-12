@@ -72,7 +72,7 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
   }
 
   return (
-    <section className="event-panel rounded-[36px] px-5 py-6 sm:px-6 sm:py-7">
+    <section className="event-panel rounded-[32px] px-4 py-5 sm:rounded-[36px] sm:px-6 sm:py-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-black tracking-[0.08em] text-sky-700">
@@ -87,14 +87,14 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid w-full gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-end">
           <button
             type="button"
             onClick={() => {
               setSelectedIds(allSelected ? [] : memories.map((memory) => memory.id));
               setErrorMessage(null);
             }}
-            className="event-button-secondary inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-black text-sky-950 transition hover:-translate-y-0.5"
+            className="event-button-secondary inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-black text-sky-950 transition hover:-translate-y-0.5 sm:w-auto"
           >
             {allSelected ? "전체 해제" : "전체 선택"}
           </button>
@@ -102,7 +102,7 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
             type="button"
             onClick={handleDownloadSelected}
             disabled={isDownloadingZip}
-            className="event-button-primary inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+            className="event-button-primary inline-flex h-11 w-full items-center justify-center rounded-full px-5 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {isDownloadingZip
               ? "ZIP 만드는 중..."
@@ -125,9 +125,9 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
           return (
             <article
               key={memory.id}
-              className="rounded-[30px] border border-sky-300/65 bg-white/88 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)]"
+              className="rounded-[26px] border border-sky-300/65 bg-white/88 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)] sm:rounded-[30px]"
             >
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <label className="inline-flex items-center gap-2 text-sm font-black text-slate-900">
                   <input
                     type="checkbox"
@@ -147,13 +147,13 @@ export function DownloadManager({ memories }: DownloadManagerProps) {
                 </label>
                 <a
                   href={`/api/memories/download/${memory.id}`}
-                  className="event-button-secondary inline-flex h-9 items-center justify-center rounded-full px-4 text-xs font-black text-sky-950 transition hover:-translate-y-0.5"
+                  className="event-button-secondary inline-flex h-10 w-full items-center justify-center rounded-full px-4 text-xs font-black text-sky-950 transition hover:-translate-y-0.5 sm:h-9 sm:w-auto"
                 >
                   단건 다운로드
                 </a>
               </div>
 
-              <div className="mt-4 flex h-[280px] items-center justify-center overflow-hidden rounded-[22px] border border-white/70 bg-sky-50 p-3">
+              <div className="mt-4 flex h-[220px] items-center justify-center overflow-hidden rounded-[20px] border border-white/70 bg-sky-50 p-3 sm:h-[250px] sm:rounded-[22px] xl:h-[280px]">
                 <img
                   src={memory.imageUrl}
                   alt={publicName}

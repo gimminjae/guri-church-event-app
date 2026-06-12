@@ -3,7 +3,6 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useEffectEvent } from "react";
-import { EVENT_COPY } from "@/lib/event";
 import { getPublicMemoryDisplayName } from "@/lib/memory-records";
 import type { MemoryRecord } from "@/types/memory";
 
@@ -57,57 +56,43 @@ export function MemoryDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-sky-950/28 px-3 py-4 backdrop-blur-md sm:items-center sm:px-6"
+      className="fixed inset-0 z-50 bg-black/92"
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           onClose();
         }
       }}
     >
-      <div className="event-panel-strong max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[34px]">
-        <div className="flex items-center justify-between gap-3 border-b border-sky-200/70 px-5 py-4 sm:px-6">
-          <div>
-            <h2 className="mt-1 text-2xl font-black tracking-[-0.05em] text-slate-950">
-              {publicName}
-            </h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="event-button-secondary inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-black text-sky-950 transition hover:-translate-y-0.5"
-          >
-            닫기
-          </button>
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute right-4 top-4 z-20 inline-flex h-11 items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 text-sm font-black text-white backdrop-blur-md transition hover:bg-white/18 sm:right-6 sm:top-6"
+      >
+        닫기
+      </button>
+
+      <div className="flex h-full flex-col">
+        <div className="flex flex-1 items-center justify-center px-4 pb-28 pt-16 sm:px-8 sm:pb-32 sm:pt-20">
+          <img
+            src={memory.imageUrl}
+            alt={publicName}
+            className="max-h-full w-auto max-w-full object-contain"
+          />
         </div>
 
-        <div className="grid max-h-[calc(92vh-86px)] overflow-y-auto lg:grid-cols-[1.08fr_0.92fr]">
-          <div className="bg-white/28 p-4 sm:p-5">
-            <div className="flex min-h-[360px] items-center justify-center overflow-hidden rounded-[26px] border border-white/70 bg-white/70 p-4 shadow-[0_16px_28px_rgba(33,110,178,0.12)]">
-              <img
-                src={memory.imageUrl}
-                alt={publicName}
-                className="max-h-[68vh] w-auto max-w-full object-contain"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 px-5 py-5 sm:px-6 sm:py-6">
-            <div className="rounded-[24px] border border-sky-200/75 bg-white/80 px-4 py-4">
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-700">
-                등록일
+        <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/58 px-5 py-4 backdrop-blur-lg sm:px-8 sm:py-5">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-2xl font-black tracking-[-0.05em] text-white sm:text-3xl">
+                {publicName}
               </p>
-              <p className="mt-2 text-base font-bold text-slate-900">
+              <p className="mt-1 text-sm font-medium text-white/70 sm:text-base">
                 {formatter.format(memory.createdAt)}
               </p>
             </div>
-
-            <div className="rounded-[24px] border border-sky-200/75 bg-white/80 px-4 py-4">
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-700">
-                설명
-              </p>
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700 sm:text-base">
-                {memory.description}
-              </p>
-            </div>
+            <p className="max-w-3xl whitespace-pre-line text-sm leading-6 text-white/90 sm:text-base sm:leading-7">
+              {memory.description}
+            </p>
           </div>
         </div>
       </div>
